@@ -1,109 +1,254 @@
-let nombre = prompt("Hola! Ingrese su nombre para iniciar")
-let opciones = prompt(`Ahora si, ${nombre} ! \n Recorda que nuestra consulta tiene un valor de $100, con un 10% de descuento en efectivo y con un 10% de recargo con tarjeta de credito ! \n\n.Ingresa "1" para ingresar a nuestra web.  \n .O bien ingresa "2" si queres salir`)
+const prendaRemeras = [
+    {nombre: "Remera Lisa B o N", valor : 3000},
+    {nombre: "Remera Lisa Color", valor : 3200},
+    {nombre: "Remera Estampada", valor : 3700},
+    {nombre: "Remera Diseño de autor", valor : 4800}
+]
 
-if ((opciones !== "") && ((opciones == "1") || (opciones == "2") )){
-    while ((opciones !== "2")){
-        menu()
-    }
-} else {
-    alert("Opcion Incorrecta")
-}
+const prendaPantalones = [
+    {nombre: "Pantalon Chino", valor : 5500},
+    {nombre: "Pantalon Jean", valor : 6300},
+    {nombre: "Pantalon Jogger", valor : 5200},
+    {nombre: "Pantalon Jogging", valor : 4900}
+]
 
-function menu(){
-    let menu = parseInt(prompt('Motivo de la consulta? \n\n 1. Alquiler \n 2. Compra/Venta'))
-    switch (menu){    
-        case 1:
-            alquiler()
-            break;
-        case 2: 
-            compraVenta()
-            break;
-        default:
-            alert("Opcion Incorrecta");
-            menu()
-            break;   
-    }
-}
+const prendaZapatillas = [
+    {nombre: "Zapatillas de Lona", valor : 7000},
+    {nombre: "Zapatillas de Gabardina", valor : 8500},
+    {nombre: "Zapatillas de Eco Cuero", valor : 10000},
+    {nombre: "Zapatillas de Cuero Premium", valor : 15750}
+]
 
-function alquiler(){
-    let menuInmo = parseInt(prompt(`Nuestras opciones de alquiler \n\n 1. Departamentos \n 2. Casas\n 3. PH \n 4. Casa Quinta \n 5. Vacacional`))
-    switch (menuInmo){
-        case 1:
-            alert("La opcion seleccionada es Departamentos")
-            pagar()
-            break;
-        case 2: 
-            alert("La opcion seleccionada es Casas")
-            pagar()
-            break;
-        case 3:
-            alert("La opcion seleccionada es PH")
-            pagar()
-            break;
-        case 4:
-            alert("La opcion seleccionada es Casa Quinta")
-            pagar()
-            break;
-        case 5:
-            alert("La opcion seleccionada es Vacacional")
-            pagar()
-            break;
-        default:
-            alert("Opcion Incorrecta");
-            menu()
-            break;   
+const prendas = prendaRemeras.concat(prendaPantalones)
+
+const productosTotales = prendas.concat(prendaZapatillas)
+
+let nombreUsuario = prompt("Buenas! Por favor ingrese su nombre")
+let numeroPrendas = parseInt(prompt(`Ahora si ${nombreUsuario}, bienvenida/o al shop online de "Toleke", en esta sección encontrará las siguiente opciones para comprar: \n\n. Remeras \n. Pantalones \n. Zapatillas \n\nPor favor indique la cantidad de prendas que va a comprar`))
+
+
+class Prendas {
+    constructor(nombre, precio) {
+        this.nombre = nombre;
+        this.precio = precio;
     }
 }
 
+if ((numeroPrendas !== "" && nombreUsuario !== "")){
+    function main() {
 
-function compraVenta(){
-    let menuInmo = parseInt(prompt(`Nuestras opciones de Compra/Venta \n\n 1. Departamentos \n 2. Casas \n 3.Chalets `))
-    switch (menuInmo){
-        case 1:
-            alert("La opcion seleccionada es Departamentos")
-            pagar()
-            break;
-        case 2: 
-            alert("La opcion seleccionada es Casas")
-            pagar()
-            break;
-        case 3:
-            alert("La opcion seleccionada es Chalets")
-            pagar()
-            break;
-        default:
-            alert("Opcion Incorrecta");
-            menu()
-            break;   
+            let pedidoFinal = pedido()
+            console.log(pedidoFinal)
+
+            condicionMain: 
+            if (pedidoFinal.length > 0){
+                alert("Tu carrito tiene los siguientes productos")
+                for (const producto of pedidoFinal) {
+                    alert (`${producto.nombre} por: $${producto.precio} `)
+                }
+
+                let precioFinal = pedidoFinal.reduce((acumulador, elemento) => acumulador + elemento.precio, 0)
+                console.log(precioFinal)
+
+                formaPago(precioFinal)
+            }
+            else {
+                break condicionMain
+            }
     }
+
+    main()
+}
+else {
+    alert("No ingresaste tu nombre y cantidad de prendas!")
 }
 
-function pagar(){
-    let pago = parseInt(prompt("Forma de pago:\n\n 1. Efectivo\n 2. Tarjeta de credito\n 3. CrediCuotas "))
-    switch (pago){
+function pedido(){
+    let prendasLista = []
+    let prendaARegistrar = 0
+
+    buclePedido: for (let i = 1; i<=numeroPrendas; i++){
+        let nombrePrenda = parseInt(prompt(`Seleccione que prendas desea comprar \n\n1. Remeras \n2. Pantalones \n3. Zapatillas \n4. Salir`))
+
+        switch (nombrePrenda){
+            case 1: 
+                remeras()
+                    prendaARegistrar = new Prendas(
+                    nombre,
+                    precio,
+                    )
+                prendasLista.push(prendaARegistrar)
+                break
+
+            case 2:
+                pantalones()
+                    prendaARegistrar = new Prendas(
+                    nombre,
+                    precio,
+                    )
+                prendasLista.push(prendaARegistrar)
+                break
+
+            case 3:
+                zapatillas()
+                    prendaARegistrar = new Prendas(
+                    nombre,
+                    precio,
+                    )
+                prendasLista.push(prendaARegistrar)
+                break
+
+            case 4:
+                alert("Hasta luego! gracias por visitar Toloke")
+                break buclePedido
+
+            default:
+                alert ("Opcion invalida")
+                break
+        }
+    }
+    return prendasLista
+}
+
+
+function remeras() {
+
+    let menuRemeras = parseInt(prompt(`Que remera preferis? \n\n 1. Lisa Blanca O Negra - ($3000)\n 2. Lisa Color - ($3200)\n 3. Estampada - ($3700)\n 4. Diseño de autor - ($4800)`))
+
+    switch (menuRemeras) {
         case 1:
-            alert('Por ser pago en efectivo, le hacemos un 10% de descuento')
-            let efvo = 100
-            let calculo1 = efvo * 0.9
-            alert(`Su pago es de: ${calculo1}`)
-            break;
+            alert("Excelente! Seleccionaste Lisa Blanca O Negra por $3000")
+            nombre = productosTotales[0].nombre
+            precio = productosTotales[0].valor
+            return nombre, precio
+
         case 2:
-            alert('Por ser pago con tarjeta de credito, tenes un 10% de recargo')
-            let cred = 100
-            let calculo2 = cred * 1.10
-            alert(`Su pago es de: ${calculo2}`)
-            break;
+            alert("Excelente! Seleccionaste Lisa Color por $3200")
+            nombre = productosTotales[1].nombre
+            precio = productosTotales[1].valor
+            return nombre, precio
+
         case 3:
-            alert('Pago en 3 cuotas sin interes')
-            let cuotas = 100
-            let qCuotas = 3
-            let calculo3 = cuotas / qCuotas
-            let calculo4 = cuotas * 1
-            alert(`Su pago es de: 3 cuotas de ${calculo3}, con un total de ${calculo4} al finalizar la 3er cuota. `)
-            break;
+            alert("Excelente! Seleccionaste Estampada por 3$700")
+            nombre = productosTotales[2].nombre
+            precio = productosTotales[2].valor
+            return nombre, precio
+
+        case 4:
+            alert("Excelente! Seleccionaste Diseño de autor por $4800")
+            nombre = productosTotales[3].nombre
+            precio = productosTotales[3].valor
+            return nombre, precio
+
         default:
-            alert("Opcion Incorrecta")
-            menu()
-            break;   
+            alert("Opcion Incorrecta");
+            remeras()
+            break
     }
 }
+
+function pantalones() {
+
+    let menuPantalones = parseInt(prompt(`Que pantalon preferis? \n\n 1. Chino - ($5500)\n 2. Jean - ($6300)\n 3. Jogger - ($5200)\n 4. Jogging - ($4900)`))
+
+    switch (menuPantalones) {
+        case 1:
+            alert("Excelente! Seleccionaste pantalon Chino por $5500")
+            nombre = productosTotales[4].nombre
+            precio = productosTotales[4].valor
+            return nombre, precio
+
+        case 2:
+            alert("Excelente! Seleccionaste pantalon Jean por $6300")
+            nombre = productosTotales[5].nombre
+            precio = productosTotales[5].valor
+            return nombre, precio
+
+        case 3:
+            alert("Excelente! Seleccionaste pantalon Jogger por $5200")
+            nombre = productosTotales[6].nombre
+            precio = productosTotales[6].valor
+            return nombre, precio
+
+        case 4:
+            alert("Excelente! Seleccionaste pantalon Jogging por $4900")
+            nombre = productosTotales[7].nombre
+            precio = productosTotales[7].valor
+            return nombre, precio
+
+        default:
+            alert("Opcion Incorrecta");
+            peaton()
+            break
+    }
+
+}
+
+function zapatillas() {
+
+    let menuZapatillas = parseInt(prompt(`Que zapatillas preferis? \n\n 1. Lona - ($7000)\n 2. Gabardina - ($8500)\n 3. Eco Cuero - ($10000)\n 4. Cuero Premium - ($15750)`))
+
+    switch (menuZapatillas) {
+        case 1:
+            alert("Excelente! Seleccionaste Zapas de Lona por $7000")
+            nombre = productosTotales[8].nombre
+            precio = productosTotales[8].valor
+            return nombre, precio
+
+        case 2:
+            alert("Excelente! Seleccionaste Zapas de Gabardina por $8500")
+            nombre = productosTotales[9].nombre
+            precio = productosTotales[9].valor
+            return nombre, precio
+
+        case 3:
+            alert("Excelente! Seleccionaste Zapas de Eco Cuero por $10000")
+            nombre = productosTotales[10].nombre
+            precio = productosTotales[10].valor
+            return nombre, precio
+
+        case 4:
+            alert("Excelente! Seleccionaste Zapas de Cuero Premium por $15750")
+            nombre = productosTotales[11].nombre
+            precio = productosTotales[11].valor
+            return nombre, precio
+
+        default:
+            alert("Opcion Incorrecta");
+            rental()
+            break
+    }
+}
+
+function valorProducto(producto, formaPago){
+    return parseInt(producto * formaPago)
+}
+
+function formaPago(precioFinal) {
+    let medioPago = parseInt(prompt("Elija su medio de pago:\n\n 1. Efectivo / Transferencia\n 2. Tarjeta de débito\n 3. Tarjeta de crédito \n\n El pago en efectivo o transferencia, tiene un 10% de descuento\n El pago con tarjeta de crédito, tiene un 5% de recargo"))
+
+    switch (medioPago) {
+        case 1:
+            alert('En efectivo tenes el 15% de descuento')
+            let pagoEfectivo = 0.85
+            alert(`Su pago es de: ${valorProducto(precioFinal, pagoEfectivo)}`)
+            break
+
+        case 2:
+            alert('Precio normal por pago con debito')
+            let pagoDebito = 1.0
+            alert(`Su pago es de: ${valorProducto(precioFinal, pagoDebito)}`)
+            break
+
+        case 3:
+            alert('Con tarjeta de credito tenes un 10% de recargo')
+            let pagoCredito = 1.10
+            alert(`Su pago es de: ${valorProducto(precioFinal, pagoCredito)}`)
+            break
+
+        default:
+            alert("No ingreso una selección válida")
+            pagar()
+            break
+    }
+} 
