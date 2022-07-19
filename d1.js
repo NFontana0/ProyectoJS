@@ -1,254 +1,232 @@
 const prendaRemeras = [
-    {nombre: "Remera Lisa B o N", valor : 3000},
-    {nombre: "Remera Lisa Color", valor : 3200},
-    {nombre: "Remera Estampada", valor : 3700},
-    {nombre: "Remera Diseño de autor", valor : 4800}
+    {id: 1, nombre: "Remera Lisa B o N", valor : 3000},
+    {id: 2, nombre: "Remera Lisa Color", valor : 3200},
+    {id: 3, nombre: "Remera Estampada", valor : 3700},
+    {id: 4, nombre: "Remera Diseño de autor", valor : 4800}
 ]
 
 const prendaPantalones = [
-    {nombre: "Pantalon Chino", valor : 5500},
-    {nombre: "Pantalon Jean", valor : 6300},
-    {nombre: "Pantalon Jogger", valor : 5200},
-    {nombre: "Pantalon Jogging", valor : 4900}
+    {id: 5, nombre: "Pantalon Chino", valor : 5500},
+    {id: 6, nombre: "Pantalon Jean", valor : 6300},
+    {id: 7, nombre: "Pantalon Jogger", valor : 5200},
+    {id: 8, nombre: "Pantalon Jogging", valor : 4900}
 ]
 
 const prendaZapatillas = [
-    {nombre: "Zapatillas de Lona", valor : 7000},
-    {nombre: "Zapatillas de Gabardina", valor : 8500},
-    {nombre: "Zapatillas de Eco Cuero", valor : 10000},
-    {nombre: "Zapatillas de Cuero Premium", valor : 15750}
+    {id: 9, nombre: "Zapatillas de Lona", valor : 7000},
+    {id: 10, nombre: "Zapatillas de Gabardina", valor : 8500},
+    {id: 11, nombre: "Zapatillas de Eco Cuero", valor : 10000},
+    {id: 12, nombre: "Zapatillas de Cuero Premium", valor : 15750}
 ]
 
 const prendas = prendaRemeras.concat(prendaPantalones)
-
 const productosTotales = prendas.concat(prendaZapatillas)
 
-let nombreUsuario = prompt("Buenas! Por favor ingrese su nombre")
-let numeroPrendas = parseInt(prompt(`Ahora si ${nombreUsuario}, bienvenida/o al shop online de "Toleke", en esta sección encontrará las siguiente opciones para comprar: \n\n. Remeras \n. Pantalones \n. Zapatillas \n\nPor favor indique la cantidad de prendas que va a comprar`))
 
+class Carrito {
+    constructor(id) {
+        this.id = id;
+        this.productos = [];
+    }
 
-class Prendas {
-    constructor(nombre, precio) {
-        this.nombre = nombre;
-        this.precio = precio;
+    calcularTotal() {
+        let total = 0;
+        for(let i = 0; i < this.productos.length; i++) {
+            total = total + this.productos[i].valor;
+        }
+        return total;
     }
 }
 
-if ((numeroPrendas !== "" && nombreUsuario !== "")){
-    function main() {
+let formulario;
+let inputNombre;
+let inputPrenda;
+let cards;
+let tablaCarrito;
+let tablaBody;
+let botones;
+let eliminar;
+let finalizar;
+let totalCompra;
+let precioFinalCompra;
 
-            let pedidoFinal = pedido()
-            console.log(pedidoFinal)
+function inicializarElementos(){
+    formulario = document.getElementById("formulario");
+    inputNombre = document.getElementById("inputNombre");
+    inputPrenda = document.getElementById("inputPrenda");
+    cards = document.getElementById("cards");
+    tablaCarrito = document.getElementById("tablaCarrito");
+    tablaBody = document.getElementById("tBody");
+    botones = document.getElementsByClassName("compra");
+    eliminar = document.getElementById("eliminar");
+    finalizar = document.getElementById("finalizar");
+    totalCompra = document.getElementById("totalCompra");
+    precioFinalCompra = document.getElementById("precioFinalCompra");
+}
 
-            condicionMain: 
-            if (pedidoFinal.length > 0){
-                alert("Tu carrito tiene los siguientes productos")
-                for (const producto of pedidoFinal) {
-                    alert (`${producto.nombre} por: $${producto.precio} `)
-                }
-
-                let precioFinal = pedidoFinal.reduce((acumulador, elemento) => acumulador + elemento.precio, 0)
-                console.log(precioFinal)
-
-                formaPago(precioFinal)
-            }
-            else {
-                break condicionMain
-            }
+function inicializarEventos() {
+    formulario.onsubmit = (event) => validarFormulario(event);
     }
 
-    main()
+function validarFormulario(event) {
+    event.preventDefault();
+    let nombre = inputNombre.value;
+    let prenda = inputPrenda.value;
+
+    if ((prenda === "Remeras") && (nombre !== "")){
+        cards.innerHTML = "";
+        prendaRemeras.forEach(producto => {
+        cards.innerHTML += renderCard(producto);
+        })
+    }
+    else if ((prenda === "Pantalones") && (nombre !== "")){
+        cards.innerHTML = "";
+        prendaPantalones.forEach(producto => {
+        cards.innerHTML += renderCard(producto);
+        })
+    }
+    else if ((prenda === "Zapatillas") && (nombre !== "")){
+        cards.innerHTML = "";
+        prendaZapatillas.forEach(producto => {
+        cards.innerHTML += renderCard(producto);
+        })
+    }
+
+    
+    let st = actualizarCarrito();
+    agregarCarrito(st);
 }
-else {
-    alert("No ingresaste tu nombre y cantidad de prendas!")
+
+function renderCard(prenda) {
+    let cardRendered = `    
+    <div class="card col-lg-5 col-md-5 m-3" style="width: 18rem;">
+        <div class="card-body col-lg-12">
+            <h5 class="card-title">${prenda.id}. ${prenda.nombre}</h5>
+            <p class="card-text">$ ${prenda.valor}</p>
+            <a href="#" class="btn btn-primary compra" id="${prenda.id}">Agregar al carrito</a>
+        </div>
+    </div>
+    `;
+    return cardRendered;
 }
 
-function pedido(){
-    let prendasLista = []
-    let prendaARegistrar = 0
-
-    buclePedido: for (let i = 1; i<=numeroPrendas; i++){
-        let nombrePrenda = parseInt(prompt(`Seleccione que prendas desea comprar \n\n1. Remeras \n2. Pantalones \n3. Zapatillas \n4. Salir`))
-
-        switch (nombrePrenda){
-            case 1: 
-                remeras()
-                    prendaARegistrar = new Prendas(
-                    nombre,
-                    precio,
-                    )
-                prendasLista.push(prendaARegistrar)
-                break
-
-            case 2:
-                pantalones()
-                    prendaARegistrar = new Prendas(
-                    nombre,
-                    precio,
-                    )
-                prendasLista.push(prendaARegistrar)
-                break
-
-            case 3:
-                zapatillas()
-                    prendaARegistrar = new Prendas(
-                    nombre,
-                    precio,
-                    )
-                prendasLista.push(prendaARegistrar)
-                break
-
-            case 4:
-                alert("Hasta luego! gracias por visitar Toloke")
-                break buclePedido
-
-            default:
-                alert ("Opcion invalida")
-                break
+function agregarCarrito (st) {
+    let carrito = new Carrito(1);
+    if(st !== null){
+        for (const item of st.productos) {
+            carrito.productos.push(item);
+            limpiarCarrito();
+            renderizarCarrito(carrito);
+            renovarStorage(carrito);
         }
     }
-    return prendasLista
+
+    let arrayDeBotones = Array.from(botones);
+    arrayDeBotones.forEach(boton => {
+        boton.addEventListener("click", (e) => {
+            let productoSeleccionado = productosTotales.find(producto => producto.id == e.target.id);
+            carrito.productos.push(productoSeleccionado);
+            limpiarCarrito();
+            renderizarCarrito(carrito);
+            renovarStorage(carrito);
+        })
+    })
+
+    eliminar.onclick = () => {eliminarCarrito()};
+    finalizar.onclick = () => {finalizarCompra(carrito), formaPago(carrito)};
 }
 
 
-function remeras() {
-
-    let menuRemeras = parseInt(prompt(`Que remera preferis? \n\n 1. Lisa Blanca O Negra - ($3000)\n 2. Lisa Color - ($3200)\n 3. Estampada - ($3700)\n 4. Diseño de autor - ($4800)`))
-
-    switch (menuRemeras) {
-        case 1:
-            alert("Excelente! Seleccionaste Lisa Blanca O Negra por $3000")
-            nombre = productosTotales[0].nombre
-            precio = productosTotales[0].valor
-            return nombre, precio
-
-        case 2:
-            alert("Excelente! Seleccionaste Lisa Color por $3200")
-            nombre = productosTotales[1].nombre
-            precio = productosTotales[1].valor
-            return nombre, precio
-
-        case 3:
-            alert("Excelente! Seleccionaste Estampada por 3$700")
-            nombre = productosTotales[2].nombre
-            precio = productosTotales[2].valor
-            return nombre, precio
-
-        case 4:
-            alert("Excelente! Seleccionaste Diseño de autor por $4800")
-            nombre = productosTotales[3].nombre
-            precio = productosTotales[3].valor
-            return nombre, precio
-
-        default:
-            alert("Opcion Incorrecta");
-            remeras()
-            break
-    }
+function actualizarCarrito (){
+    let storage = JSON.parse(localStorage.getItem("carrito"));
+    localStorage.removeItem("carrito"); 
+    return storage;
 }
 
-function pantalones() {
-
-    let menuPantalones = parseInt(prompt(`Que pantalon preferis? \n\n 1. Chino - ($5500)\n 2. Jean - ($6300)\n 3. Jogger - ($5200)\n 4. Jogging - ($4900)`))
-
-    switch (menuPantalones) {
-        case 1:
-            alert("Excelente! Seleccionaste pantalon Chino por $5500")
-            nombre = productosTotales[4].nombre
-            precio = productosTotales[4].valor
-            return nombre, precio
-
-        case 2:
-            alert("Excelente! Seleccionaste pantalon Jean por $6300")
-            nombre = productosTotales[5].nombre
-            precio = productosTotales[5].valor
-            return nombre, precio
-
-        case 3:
-            alert("Excelente! Seleccionaste pantalon Jogger por $5200")
-            nombre = productosTotales[6].nombre
-            precio = productosTotales[6].valor
-            return nombre, precio
-
-        case 4:
-            alert("Excelente! Seleccionaste pantalon Jogging por $4900")
-            nombre = productosTotales[7].nombre
-            precio = productosTotales[7].valor
-            return nombre, precio
-
-        default:
-            alert("Opcion Incorrecta");
-            peaton()
-            break
-    }
-
+function renovarStorage(carrito) {
+    localStorage.removeItem("carrito"); 
+    localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
-function zapatillas() {
-
-    let menuZapatillas = parseInt(prompt(`Que zapatillas preferis? \n\n 1. Lona - ($7000)\n 2. Gabardina - ($8500)\n 3. Eco Cuero - ($10000)\n 4. Cuero Premium - ($15750)`))
-
-    switch (menuZapatillas) {
-        case 1:
-            alert("Excelente! Seleccionaste Zapas de Lona por $7000")
-            nombre = productosTotales[8].nombre
-            precio = productosTotales[8].valor
-            return nombre, precio
-
-        case 2:
-            alert("Excelente! Seleccionaste Zapas de Gabardina por $8500")
-            nombre = productosTotales[9].nombre
-            precio = productosTotales[9].valor
-            return nombre, precio
-
-        case 3:
-            alert("Excelente! Seleccionaste Zapas de Eco Cuero por $10000")
-            nombre = productosTotales[10].nombre
-            precio = productosTotales[10].valor
-            return nombre, precio
-
-        case 4:
-            alert("Excelente! Seleccionaste Zapas de Cuero Premium por $15750")
-            nombre = productosTotales[11].nombre
-            precio = productosTotales[11].valor
-            return nombre, precio
-
-        default:
-            alert("Opcion Incorrecta");
-            rental()
-            break
-    }
+function limpiarCarrito() {
+    tablaCarrito.innerHTML = "";
 }
 
-function valorProducto(producto, formaPago){
-    return parseInt(producto * formaPago)
+function eliminarCarrito() {
+    tablaCarrito.innerHTML = "";
+    localStorage.clear();
 }
 
-function formaPago(precioFinal) {
-    let medioPago = parseInt(prompt("Elija su medio de pago:\n\n 1. Efectivo / Transferencia\n 2. Tarjeta de débito\n 3. Tarjeta de crédito \n\n El pago en efectivo o transferencia, tiene un 10% de descuento\n El pago con tarjeta de crédito, tiene un 5% de recargo"))
+function finalizarCompra(carrito){
+    let finalDeCompra = document.createElement("h3");
+    totalCompra.innerHTML = "";
+    finalDeCompra.innerHTML = `
+        Valor actualizado del carrito: <b>${carrito.calcularTotal()}</b>. ¿Que medio de pago preferis utilizar?.
+    `;
+    totalCompra.appendChild(finalDeCompra);
 
-    switch (medioPago) {
-        case 1:
-            alert('En efectivo tenes el 15% de descuento')
-            let pagoEfectivo = 0.85
-            alert(`Su pago es de: ${valorProducto(precioFinal, pagoEfectivo)}`)
-            break
+    let divtotal = document.createElement("div");
+    divtotal.innerHTML = `
+        <button type="submit" id="efectivo" class="btn btn-primary mt-1 mb-1 align-self-center" id="">Efectivo - 15% de descuento</button><br>
+        <button type="submit" id="debito/transferencia" class="btn btn-primary mt-1 mb-1 align-self-center" id="">Tarjeta de débito / Transferencia bancaria - Precio original (sin descuento)</button><br>
+        <button type="submit" id="credito" class="btn btn-primary mt-1 mb-1 align-self-center" id="">Tarjeta de crédito - 10% de recargo</button>`;
+    totalCompra.appendChild(divtotal);
+}
 
-        case 2:
-            alert('Precio normal por pago con debito')
-            let pagoDebito = 1.0
-            alert(`Su pago es de: ${valorProducto(precioFinal, pagoDebito)}`)
-            break
+function formaPago (carrito) {
 
-        case 3:
-            alert('Con tarjeta de credito tenes un 10% de recargo')
-            let pagoCredito = 1.10
-            alert(`Su pago es de: ${valorProducto(precioFinal, pagoCredito)}`)
-            break
+    let efectivo = document.getElementById("efectivo");
+    let debitoTransferencia = document.getElementById("debito/transferencia");
+    let credito = document.getElementById("credito");
 
-        default:
-            alert("No ingreso una selección válida")
-            pagar()
-            break
-    }
-} 
+    efectivo.onclick = () => {
+        precioFinalCompra.innerHTML = "";
+        let precioCarrito = document.createElement("h3");
+        precioCarrito.innerHTML = `
+            Valor total a pagar: <b>${carrito.calcularTotal()*0.85}</b>.`;
+        precioFinalCompra.appendChild(precioCarrito);
+    };
+
+    debitoTransferencia.onclick = () => {
+        precioFinalCompra.innerHTML = "";
+        let precioCarrito = document.createElement("h3");
+        precioCarrito.innerHTML = `
+            Valor total a pagar: <b>${carrito.calcularTotal()*1.0}</b>.`;
+        precioFinalCompra.appendChild(precioCarrito);
+    };
+
+    credito.onclick = () => {
+        precioFinalCompra.innerHTML = "";
+        let precioCarrito = document.createElement("h3");
+        precioCarrito.innerHTML = `
+            Valor total a pagar: <b>${carrito.calcularTotal()*1.10}</b>.`;
+        precioFinalCompra.appendChild(precioCarrito);
+    };
+
+    eliminarCarrito();
+}
+
+function renderizarCarrito(carrito) {
+    carrito.productos.forEach(producto => {
+        let filaTabla = document.createElement("tr");
+        filaTabla.innerHTML = `
+            <td class="text-center">${producto.id}</td>
+            <td class="text-center">${producto.nombre}</td>
+            <td class="text-center">${producto.valor}</td>`;
+            tablaCarrito.appendChild(filaTabla);
+    })
+
+    let filaTotal = document.createElement("tr");
+    filaTotal.innerHTML = `
+        <td class="text-center"><b>Subtotal</b></td>
+        <td class=""></td>
+        <td class="text-center"><b>${carrito.calcularTotal()}</b></td>`;
+    tablaCarrito.appendChild(filaTotal);
+}
+
+function main (){
+    inicializarElementos();
+    inicializarEventos();
+}
+
+main();

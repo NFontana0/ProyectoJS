@@ -4,10 +4,73 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+    <title>JavaScript Coderhouseta</title>
 </head>
 <body>
-   
+    <main class="container mt-5 mb-5">
+        <h1 class="text-center">Por favor, ingresa tu nombre y la/s prenda/s a adquirir!</h1>
+        <form class="row g-3" id="formulario">
+            <div class="col-md-12">
+                <label for="inputNombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="inputNombre">
+            </div>
+            <div class="col-md-12">
+                <label for="inputTipo" class="form-label">Prendas a adquirir</label>
+                <select id="inputPrenda" class="form-select">
+                    <option>
+                        Remeras
+                    </option>
+                    <option>
+                        Pantalones
+                    </option>
+                    <option>
+                        Zapatillas
+                    </option>
+                </select>
+            </div>
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary">Avanzar</button>
+            </div>
+        </form>
+
+        <div class="row mt-5" id="cards"></div>
+
+
+        <div class="col-md-12">
+            <table id="" class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <td class="text-center">ID</td>
+                    <td class="text-center">Nombre</td>
+                    <td class="text-center">Valor</td>
+                </tr>
+                </thead>
+            </table>
+            <table id="tablaCarrito" class="table table-striped table-hover">
+                <tbody>
+                </tbody>
+
+            </table>
+        </div>
+
+        <div class="col-12 text-center justify-conten-between">
+            <button type="reset" class="btn btn-primary mt-5 mb-5" id="eliminar">Eliminar carrito</button>
+            <button type="submit" class="btn btn-primary mt-5 mb-5" id="finalizar">Finalizar compra</button>
+        </div>
+        
+        <div id="totalCompra" class="justify-content-center">
+            
+        </div>
+
+        <div id="precioFinalCompra" class="justify-content-center">
+            
+        </div>
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
         <script src="d1.js"></script>
 </body>
 </html>
