@@ -132,7 +132,7 @@ function agregarCarrito (st) {
         })
     })
 
-    eliminar.onclick = () => {eliminarCarrito()};
+    eliminar.onclick = () => {eliminadoCarrito()};
     finalizar.onclick = () => {finalizarCompra(carrito), formaPago(carrito)};
 }
 
@@ -152,10 +152,48 @@ function limpiarCarrito() {
     tablaCarrito.innerHTML = "";
 }
 
-function eliminarCarrito() {
-    tablaCarrito.innerHTML = "";
-    localStorage.clear();
+
+function eliminadoCarrito() {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    })
+    
+    swalWithBootstrapButtons.fire({
+        title: 'Estas segura/o de limpiar tu carrito compra?',
+        text: "Esta accion es irreversible!",
+        icon: '¡Stop!',
+        showCancelButton: true,
+        confirmButtonText: 'Si, eliminar mi carrito de compra',
+        cancelButtonText: 'No, continuar comprando',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+                tablaCarrito.innerHTML = "";
+                localStorage.clear();
+                
+        swalWithBootstrapButtons.fire(
+            'Eliminado!',
+            'Tu carrito de compra ha sido borrado',
+            'Exitoso'
+        )
+        } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+        ) {
+        swalWithBootstrapButtons.fire(
+            'Cancelado!',
+            'Continuar la compra.',
+            'Error'
+        )
+        }
+    })
 }
+
 
 function finalizarCompra(carrito){
     let finalDeCompra = document.createElement("h3");
