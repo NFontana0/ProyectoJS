@@ -1,0 +1,6 @@
+[
+    {"id": 5, "nombre": "Pantalon Chino", "valor" : 5500},
+    {"id": 6, "nombre": "Pantalon Jean", "valor" : 6300},
+    {"id": 7, "nombre": "Pantalon Jogger", "valor" : 5200},
+    {"id": 8, "nombre": "Pantalon Jogging", "valor" : 4900}
+]

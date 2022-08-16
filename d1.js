@@ -1,26 +1,32 @@
-const prendaRemeras = [
-    {id: 1, nombre: "Remera Lisa B o N", valor : 3000},
-    {id: 2, nombre: "Remera Lisa Color", valor : 3200},
-    {id: 3, nombre: "Remera Estampada", valor : 3700},
-    {id: 4, nombre: "Remera Diseño de autor", valor : 4800}
-]
-
-const prendaPantalones = [
-    {id: 5, nombre: "Pantalon Chino", valor : 5500},
-    {id: 6, nombre: "Pantalon Jean", valor : 6300},
-    {id: 7, nombre: "Pantalon Jogger", valor : 5200},
-    {id: 8, nombre: "Pantalon Jogging", valor : 4900}
-]
-
-const prendaZapatillas = [
-    {id: 9, nombre: "Zapatillas de Lona", valor : 7000},
-    {id: 10, nombre: "Zapatillas de Gabardina", valor : 8500},
-    {id: 11, nombre: "Zapatillas de Eco Cuero", valor : 10000},
-    {id: 12, nombre: "Zapatillas de Cuero Premium", valor : 15750}
-]
-
+const prendaRemeras = []
+const prendaPantalones = []
+const prendaZapatillas = []
 const prendas = prendaRemeras.concat(prendaPantalones)
 const productosTotales = prendas.concat(prendaZapatillas)
+
+class Remeras {
+    constructor(id, nombre, valor) {
+        this.id = id;
+        this.nombre = nombre;
+        this.valor = valor;
+    }
+}
+
+class Pantalones {
+    constructor(id, nombre, valor) {
+        this.id = id;
+        this.nombre = nombre;
+        this.valor = valor;
+    }
+}
+
+class Zapatillas {
+    constructor(id, nombre, valor) {
+        this.id = id;
+        this.nombre = nombre;
+        this.valor = valor;
+    }
+}
 
 
 class Carrito {
@@ -194,8 +200,16 @@ function eliminadoCarrito() {
     })
 }
 
+function alertClean () {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Su carrito esta vacío',
+    })
+}
 
 function finalizarCompra(carrito){
+
+    if(carrito.calcularTotal() !== 0){
     let finalDeCompra = document.createElement("h3");
     totalCompra.innerHTML = "";
     finalDeCompra.innerHTML = `
@@ -209,6 +223,9 @@ function finalizarCompra(carrito){
         <button type="submit" id="debito/transferencia" class="btn btn-primary mt-1 mb-1 align-self-center" id="">Tarjeta de débito / Transferencia bancaria - Precio original (sin descuento)</button><br>
         <button type="submit" id="credito" class="btn btn-primary mt-1 mb-1 align-self-center" id="">Tarjeta de crédito - 10% de recargo</button>`;
     totalCompra.appendChild(divtotal);
+    } else {
+    alertClean();
+    }
 }
 
 function formaPago (carrito) {
@@ -262,9 +279,42 @@ function renderizarCarrito(carrito) {
     tablaCarrito.appendChild(filaTotal);
 }
 
-function main (){
+async function obtenerArrayRemeras() {
+    const res = await fetch("remeras.json");
+    const data = await res.json();
+    data.forEach(item => {
+        let remeras = new Remeras (item.id, item.nombre, item.valor);
+        prendaRemeras.push(remeras)
+        productosTotales.push(remeras);
+        })
+}
+
+async function obtenerArrayPantalones() {
+    const res = await fetch("pantalones.json");
+    const data = await res.json();
+    data.forEach(item => {
+        let pantalones = new Pantalones (item.id, item.nombre, item.valor);
+        prendaPantalones.push(pantalones)
+        productosTotales.push(pantalones);
+        })
+}
+
+async function obtenerArrayZapatillas() {
+    const res = await fetch("zapatillas.json");
+    const data = await res.json();
+    data.forEach(item => {
+        let zapatillas = new Zapatillas (item.id, item.nombre, item.valor);
+        prendaZapatillas.push(zapatillas)
+        productosTotales.push(zapatillas);
+        })
+}
+
+async function main (){
     inicializarElementos();
     inicializarEventos();
+    await obtenerArrayRemeras();
+    await obtenerArrayPantalones();
+    await obtenerArrayZapatillas();
 }
 
 main();
